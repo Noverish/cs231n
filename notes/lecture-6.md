@@ -85,7 +85,45 @@ Xavier Initialization을 하자 (실험적으로 알아낸 것)
 
 ## Batch Normalization
 
-???
+Batch 크기 만큼의 activation value가 있다고 하면 우리는 이 값들이 정규 분포를 이루기를 바란다.
+간단하게 Batch 크기 만큼의 activation들의 평균과 분산을 계산해서 정규 분포화 하면 된다.
+normalization 함수를 보면 미분 가능하다. 따라서 평균과 분산을 상수로 저장해 놓고 있다가 back prop에서 쓰면 된다.
+
+Batch의 크기가 N이고 각 학습 데이터 마다 D개의 feature가 있다고 해보자.
+feature 별로 평균과 분산을 구한 다음에 (D개의 평균과 분산이 있다) feature 마다 normalization을 한다. 
+
+이러한 연산은 보통 FC나 Conv Layer 직후에 넣어준다.
+
+일반적인 깊은 신경망은 레이어의 가중치(W)를 계속 곱해줘서 값이 점차 0에 가까워지거나 엄청 커지는 문제가 발생했지만
+Normalization은 이런 문제를 없애버린다.
+Conv Layer에서의 Normalization 같은 경우에는 Activation Map의 채널마다 Normalize 해준다.
+
+FC를 거칠 때 마다 BN을 해주는 것에 대한 의문이 생긴다. tanh의 입력이 정말 정규분포를 이뤄야 하는 것인가?
+Normalization은 tanh의 선형적인 부분에서만 입력이 존재하도록 한다.
+그러면 Saturation이 전혀 발생하지 않게 된다. 그런데 Saturation이 전혀 발생하지 않는 것 보다 얼만큼의 Saturation이 발생하는 지 조절하는 것이 더 좋다.
+그래서 Normalization 연산 후에 Scaling 연산을 추가한다. 여기서 Scaling 연산에서 쓰이는 감마와 베타는 학습 가능한 변수이다.
+
+BN이 Regularization의 역할도 한다. 각 레이어의 출력은 학습 데이터 하나의 영향을 받는 것이 아니라 batch안의 모든 데이터의 영향을 받는다.
+
+Q. 왜 감마와 베타를 학습시켜서 indentity function으로 만드는가?    
+A. 유연성을 갖게 하기 위해서이다. BN은 레이어의 입력 값이 정규 분포를 이루게 하는 건데 이게 항상 좋지는 않다.
+tanh가 입력 값에 일부를 saturation하게 만들어 주는 역할을 하게 하고 싶을 수도 있다.
+
+Q. ?    
+A. FC의 각 뉴런의 출력마다 BN을 해준다.
+
+Q. Reinforcement Learning과 같이 batch 크기가 작은 경우에는 어떻게 하느냐?    
+A. 어떻게 하는 지에 대한 논문 많으니까 읽어라. Batch 크기가 작으면 정확도가 조금 떨어지지만 비슷한 효과를 준다.
+
+Q. 입력을 정규 분포 형태로 만들어 버리면 기존의 구조를 잃는 것이 아닌가?    
+A. 아니다. 데이터 전처리 할 때도 정규 분포로 만든다. 그저 연산이 잘 수행되도록 데이터를 조금만 선형 변환 하는 것이다.
+CNN 같은 경우에는 Conv Layer의 출력인 Activation map의 공간적인 구조를 유지해야 하기 때문에 normalize 할 때 전체 map의 평균과 분산을 같이 구한다.
+
+Q. 감마와 베타를 학습시켜버리면 identity mapping이 되서 BN이 사라지는 게 아닌가?    
+A. 신경망이 BN이 쓸모 없다고 판단해서 identity mapping이 되버리면 그렇게 되겠지만 일반적으로 그렇지 않는다.
+
+BN에서 평균과 분산은 학습 데이터에서 구한 것이라서 Test할 때 추가적인 계산은 하지 않는다.
+Training할 때 나온 평균과 분산의 평균 값을 Test 할 때 쓴다
 
 ## Babysitting the Learning Process
 
