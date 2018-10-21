@@ -1,5 +1,5 @@
 
-# Lecture 6 notes
+# Lecture 6 note
 
 ## Activation function
 

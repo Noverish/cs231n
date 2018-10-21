@@ -1,5 +1,5 @@
 
-# Lecture 7 notes
+# Lecture 7 note
 
 hyperparameter를 정할 때 넓은 범위부터 시작한 다음에 성능이 좋은 것을 기준으로 점차 줄여 나가라.
 중요한 hyperparameter에는 learning rate가 가장 중요하고 그 다음으로는 regularization, learning rate decay, model size 등이 있다.
