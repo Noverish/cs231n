@@ -1,5 +1,5 @@
 
-# Lecture 3 note
+# Lecture 2 note
 
 Sementic Gap : 픽셀 값의 숫자 집합과 실제 그 이미지에 붙인 레이블의 차이
 
